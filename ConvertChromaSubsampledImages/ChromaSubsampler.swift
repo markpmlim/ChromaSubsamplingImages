@@ -162,12 +162,6 @@ class ChromaSubsampler
         // This step is necessary and is once only.
         // We could have executed the above call vImageConvert_AnyToAny with
         // dstYpCbCr8PlanarBuffers as the destination of the conversion
-    /*
-        let size = Int(srcYpCbCr8PlanarBuffers[0].height) * srcYpCbCr8PlanarBuffers[0].rowBytes
-        memcpy(dstYpCbCr8PlanarBuffers[0].data,
-               srcYpCbCr8PlanarBuffers[0].data,
-               size)
-    */
         error = vImageCopyBuffer(
             &srcYpCbCr8PlanarBuffers[0],
             &dstYpCbCr8PlanarBuffers[0],
