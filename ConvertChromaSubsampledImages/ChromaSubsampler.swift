@@ -40,12 +40,7 @@ class ChromaSubsampler
     init?(cgImage: CGImage)
     {
         var error = vImage_Error()
- 
-        guard error == vImage_Error(kvImageNoError)
-        else {
-            return nil
-        }
-
+    
         error = vImageBuffer_InitWithCGImage(
             &rgbSourceBuffer,
             &cgImageFormat,
@@ -57,7 +52,6 @@ class ChromaSubsampler
         else {
             return nil
         }
-
      }
     
     deinit {
