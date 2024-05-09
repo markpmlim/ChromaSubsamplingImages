@@ -40,7 +40,7 @@ class ChromaSubsampler
     init?(cgImage: CGImage)
     {
         var error = vImage_Error()
-    
+ 
         error = vImageBuffer_InitWithCGImage(
             &rgbSourceBuffer,
             &cgImageFormat,
@@ -56,15 +56,11 @@ class ChromaSubsampler
     
     deinit {
         // We don't know the alignment which is usually 16 bytes
-        rgbSourceBuffer.data.deallocate(bytes: rgbSourceBuffer.rowBytes * Int(rgbSourceBuffer.height),
-                                        alignedTo: 1)
+        free(rgbSourceBuffer.data)
         let numberOfDestinationBuffers = srcYpCbCr8PlanarBuffers.count
         for i in 0..<numberOfDestinationBuffers {
-            let rowBytes = srcYpCbCr8PlanarBuffers[i].rowBytes
-            let height = srcYpCbCr8PlanarBuffers[i].height
-            let size = rowBytes * Int(height)
-            srcYpCbCr8PlanarBuffers[i].data.deallocate(bytes: size, alignedTo: 1)
-            dstYpCbCr8PlanarBuffers[i].data.deallocate(bytes: size, alignedTo: 1)
+            free(srcYpCbCr8PlanarBuffers[i].data)
+            free(dstYpCbCr8PlanarBuffers[i].data)
         }
     }
 
@@ -148,8 +144,8 @@ class ChromaSubsampler
             vImage_Flags(kvImagePrintDiagnosticsToConsole))
 
         guard error == vImage_Error(kvImageNoError)
-            else {
-                return false
+        else {
+            return false
         }
 
         // Copy the pixel data from the source luma plane to the destination luma plane.
@@ -237,10 +233,10 @@ class ChromaSubsampler
         let height = rgbSourceBuffer.height
         let size = Int(rgbSourceBuffer.height) * rgbSourceBuffer.rowBytes
 
-        let memoryPtr = UnsafeMutableRawPointer.allocate(bytes: size,
-                                                         alignedTo: 1)
+        let memoryPtr = malloc(size)
+
         defer {
-            memoryPtr.deallocate(bytes: size, alignedTo: 1)
+            free(memoryPtr)
         }
 
         // Create a vImage_Buffer object that has the same height and width

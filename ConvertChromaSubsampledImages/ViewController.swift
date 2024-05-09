@@ -61,7 +61,6 @@ class ViewController: NSViewController
         let options = [
             kCGImageSourceShouldCache as String : true,
             kCGImageSourceShouldAllowFloat as String : true,
-            kCGImagePropertyHasAlpha as String : false,
         ] as CFDictionary
 
         guard let image = CGImageSourceCreateImageAtIndex(imageSource, 0, options)
